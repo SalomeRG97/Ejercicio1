@@ -1,0 +1,32 @@
+﻿@model Ejercicio1.Api.ResultadoValidacion
+
+@{
+    ViewData["Title"] = "Resultados de Validación";
+}
+<div class="container-results">
+    <h1>Resultados de Validación de Luces</h1>
+
+    <h2>Mediciones de Luces</h2>
+    <ul>
+        <li>Int_Baja_Izq_1: @Model.MedicionLuces.Int_Baja_Der_1</li>
+        <li>Inc_Baja_Izq_1: @Model.MedicionLuces.Inc_Baja_Izq_1</li>
+        <li>Int_Baja_Der_1: @Model.MedicionLuces.Int_Baja_Der_1</li>
+    </ul>
+
+    <h2>Luces con Medición No Requerida</h2>
+    <ul>
+        @foreach (var luz in Model.LucesConMedicionNoRequerida)
+        {
+            <li>@luz</li>
+        }
+    </ul>
+    <h2>Luces con Medición Requerida</h2>
+    <ul>
+        @foreach (var luz in Model.LucesConMedicionRequerida)
+        {
+            <li>@luz</li>
+        }
+    </ul>
+</div>
+
+
