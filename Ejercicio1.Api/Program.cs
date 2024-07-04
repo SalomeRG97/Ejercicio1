@@ -1,9 +1,17 @@
+using IoC;
+using IoC.Ejercicios;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+SerilogIoC.ConfigureSeqService(builder);
+Ejercicio_AutomapperIoC.ConfigureServie(builder);
+Ejercicio_DatabaseIoC.ConfigureSQLServerService(builder);
+Ejercicio_BusinessLogicIoC.RepositoryService(builder);
+Ejercicio_BusinessLogicIoC.ReglasNegocioService(builder);
+
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

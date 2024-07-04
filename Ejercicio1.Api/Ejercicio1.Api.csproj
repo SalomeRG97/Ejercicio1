@@ -11,4 +11,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Configuraciones\Configuraciones.csproj" />
+    <ProjectReference Include="..\Ejercicio1.DTO\Ejercicio1.DTO.csproj" />
+    <ProjectReference Include="..\Ejercicio1.Interfaces\Ejercicio1.Interfaces.csproj" />
+    <ProjectReference Include="..\IoC\IoC.csproj" />
+  </ItemGroup>
+
 </Project>
