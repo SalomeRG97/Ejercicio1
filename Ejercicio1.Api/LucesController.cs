@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Ejercicio1.Api
 {
@@ -8,46 +9,90 @@ namespace Ejercicio1.Api
     [ApiController]
     public class LucesController : ControllerBase
     {
-        //private readonly PatronLuces _patronLuces = new PatronLuces
-        //{
-        //    Int_Baja_Izq_1 = true,
-        //    Inc_Baja_Izq_1 = false,
-        //    Int_Baja_Der_1 = true
-        //};
+        private readonly PatronesLuces _patronesLuces;
 
-        [HttpPost("validar")]
-        public IActionResult Validar(PatronLuces patron)
+        public LucesController()
         {
-            var resultado = new ResultadoValidacion();
-            var medicionLuces = new MedicionLuces();
+            _patronesLuces = new PatronesLuces();
+        }
+        [HttpGet("Get")]
+        public IActionResult Get()
+        {
+            return Ok(_patronesLuces.Patrones);
+        }
+        [HttpGet("GetByCode/{id}")]
+        public async Task<IActionResult> GetByCode(int id)
+        {
+            var patron = _patronesLuces.Patrones.FirstOrDefault(p => p.Id == id);
 
-            ValidarPropiedad(nameof(patron.Int_Baja_Izq_1), patron.Int_Baja_Izq_1, medicionLuces, resultado);
-            ValidarPropiedad(nameof(patron.Inc_Baja_Izq_1), patron.Inc_Baja_Izq_1, medicionLuces, resultado);
-            ValidarPropiedad(nameof(patron.Int_Baja_Der_1), patron.Int_Baja_Der_1, medicionLuces, resultado);
-            resultado.MedicionLuces = medicionLuces;
+            if (patron == null)
+            {
+                return NotFound($"Patrón con ID {id} no encontrado.");
+            }
 
-            return Ok(resultado);
+            return Ok(patron);
         }
 
-        private void ValidarPropiedad(string nombrePropiedad, bool patronValor, MedicionLuces medicionLuces, ResultadoValidacion resultado)
+        [HttpPost("validar/{id}")]
+
+        public IActionResult Validar(MedicionLuces medicion, int id)
+        {
+            PatronLuces patron;
+
+            try
+            {
+                var resultado = new ResultadoValidacion();
+                resultado.MedicionLuces = new MedicionLuces();
+
+                // Selección del patrón
+                if (id == 1)
+                {
+                    patron = _patronesLuces.Patrones.FirstOrDefault(p => p.Id == 1);
+                }
+                else if (id == 2)
+                {
+                    patron = _patronesLuces.Patrones.FirstOrDefault(p => p.Id == 2);
+                }
+                else
+                {
+                    return BadRequest("Patrón no válido seleccionado.");
+                }
+
+                // Validación de propiedades
+                ValidarPropiedad(nameof(medicion.Int_Baja_Izq_1), medicion.Int_Baja_Izq_1, patron.Int_Baja_Izq_1, resultado);
+                ValidarPropiedad(nameof(medicion.Inc_Baja_Izq_1), medicion.Inc_Baja_Izq_1, patron.Inc_Baja_Izq_1, resultado);
+                ValidarPropiedad(nameof(medicion.Int_Baja_Der_1), medicion.Int_Baja_Der_1, patron.Int_Baja_Der_1, resultado);
+
+                return Ok(resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        private void ValidarPropiedad(string nombrePropiedad, decimal? medicionValor, bool patronValor, ResultadoValidacion resultado)
         {
             PropertyInfo propertyInfo = typeof(MedicionLuces).GetProperty(nombrePropiedad);
-            var nuevoValor = ObtenerValorMedicion(nombrePropiedad);
-
             if (patronValor)
             {
-                propertyInfo.SetValue(medicionLuces, nuevoValor);
+                if (medicionValor == null)
+                {
+                    throw new InvalidOperationException($"El valor para {nombrePropiedad} no puede ser null.");
+                }
+                propertyInfo.SetValue(resultado.MedicionLuces, medicionValor);
                 resultado.LucesConMedicionNoRequerida.Add(nombrePropiedad);
             }
             else
             {
-                propertyInfo.SetValue(medicionLuces, null);
+                if (medicionValor != null)
+                {
+                    throw new InvalidOperationException($"El valor para {nombrePropiedad} debe ser null.");
+                }
+                propertyInfo.SetValue(resultado.MedicionLuces, medicionValor);
                 resultado.LucesConMedicionRequerida.Add(nombrePropiedad);
             }
         }
-        private decimal? ObtenerValorMedicion(string nombrePropiedad)
-        {
-            return new decimal?(123.45M);
-        }
+
     }
 }

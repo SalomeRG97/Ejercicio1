@@ -15,22 +15,66 @@ namespace UI.Ejercicio1.Controllers
             _apiLucesController = apiLucesController;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var patron = await _apiLucesController.Get();
+                return View(patron);
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("ErrorBadRequest");
+            }
+        }
+        [HttpGet("Medicion/{Id}")]
+        public async Task<IActionResult> Medicion([FromRoute] int Id)
+        {
+            try
+            {
+                if (Id != 0)
+                {
+                    var patron = await _apiLucesController.GetByCode(Id);
+
+                    if (patron == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "El patrón no existe");
+                        return View("Index");
+                    }
+
+                    return View(patron);
+                }
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("ErrorBadRequest");
+            }
         }
         [HttpPost("Validar")]
-        public async Task<IActionResult> Validar(PatronLuces patron)
+        public async Task<IActionResult> Validar(MiViewModel patron)
         {
-            var result = await _apiLucesController.Validar(patron);
-
-            if (result == null)
+            try
             {
-                TempData["SuccessMessage"] = "Recurso creado exitosamente";
-                return Redirect("/Home");
-            }
+                var model = new MedicionLuces
+                {
+                    Int_Baja_Izq_1 = patron.Int_Baja_Izq_1_Med,
+                    Inc_Baja_Izq_1 = patron.Inc_Baja_Izq_1_Med,
+                    Int_Baja_Der_1 = patron.Int_Baja_Der_1_Med
+                };
+                var result = await _apiLucesController.Validar(model, patron.Id);
+                return View("Resultados", result);
 
-            return View("Resultados", result);
+
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+                return View("ErrorBadRequest");
+            }
         }
     }
 }

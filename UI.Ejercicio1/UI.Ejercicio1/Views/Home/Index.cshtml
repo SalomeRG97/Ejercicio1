@@ -1,33 +1,40 @@
-﻿@model Ejercicio1.Api.PatronLuces
+﻿@model List<Ejercicio1.Api.PatronLuces>
 
-@{
-    ViewData["Title"] = "Home Page";
-}
-<div class="text-center">
-    <h1>Formulario de Validación de Luces</h1>
-    <form asp-controller="Home" asp-action="Validar" method="post">
-        <section>
-            <label asp-for="Int_Baja_Izq_1">Int_Baja_Izq_1:</label>
-            <select asp-for="Int_Baja_Izq_1">
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </select>
-        </section>
-        <section>
-            <label asp-for="Inc_Baja_Izq_1">Inc_Baja_Izq_1:</label>
-            <select asp-for="Inc_Baja_Izq_1">
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </select>
-        </section>
-        <section>
-            <label asp-for="Int_Baja_Der_1">Int_Baja_Der_1:</label>
-            <select asp-for="Int_Baja_Der_1">
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </select>
-        </section>
-        <button type="submit">Enviar</button>
-    </form>
-</div>
+<section>
+    <h1>Patrones de luces</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Inc_Baja_Izq_1</th>
+                <th>Int_Baja_Izq_1</th>
+                <th>Int_Baja_Der_1</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Inc_Baja_Izq_1</td>
+                        <td>@item.Int_Baja_Izq_1</td>
+                        <td>@item.Int_Baja_Der_1</td>
+                        <td>
+                            <a href="Medicion/@item.Id">Seleccionar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No hay patrones disponibles.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
 

@@ -6,11 +6,13 @@ namespace Ejercicio1.Api.ServiceCall
         public ApiLucesController(HttpClient httpClient) : base(httpClient)
         {
         }
-        public async Task<ResultadoValidacion> Validar(PatronLuces patron)
+        public async Task<List<PatronLuces>> Get() => await Get<List<PatronLuces>>("Luces/Get");
+        public async Task<MiViewModel> GetByCode(int id) => await Get<MiViewModel>($"Luces/GetByCode/{id}");
+        public async Task<ResultadoValidacion> Validar(MedicionLuces medicion, int patronSeleccionado)
         {
             try
             {
-                var response = await Post<ResultadoValidacion, PatronLuces>("Luces/validar", patron);
+                var response = await Post<ResultadoValidacion, MedicionLuces>("Luces/validar", medicion, patronSeleccionado);
 
                 if (response != null)
                 {

@@ -45,11 +45,11 @@ namespace Ejercicio1.Api.ServiceCall
         /// <param name="uri">url ws</param>
         /// <param name="Element">Elemento del tipo enviado</param>
         /// <returns></returns>
-        public async Task<R> Post<R, S>(string uri, S Element)
+        public async Task<R> Post<R, S>(string uri, S Element, int ent)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject(Element), Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(uri, content);
+            string url = $"{uri}/{ent}";
+            var response = await _httpClient.PostAsync(url, content);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {

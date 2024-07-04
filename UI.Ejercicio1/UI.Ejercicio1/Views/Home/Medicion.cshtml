@@ -1,0 +1,68 @@
+﻿@model Ejercicio1.Api.MiViewModel
+
+@{
+    ViewData["Title"] = "Medición Page";
+}
+<div class="text-center">
+    <h1>Formulario de Validación de Luces</h1>
+    <div class="formulario-luces">
+        <form asp-controller="Home" asp-action="Validar" method="post">
+            <section>
+                <label asp-for="Id">Patron luces:</label>
+                <input asp-for="Id" readonly />
+            </section>
+            <section>
+                <label asp-for="Int_Baja_Izq_1">Int_Baja_Izq_1:</label>
+                <input asp-for="Int_Baja_Izq_1" readonly />
+            </section>
+            <section>
+                <label asp-for="Inc_Baja_Izq_1">Inc_Baja_Izq_1:</label>
+                <input asp-for="Inc_Baja_Izq_1" readonly />
+            </section>
+            <section>
+                <label asp-for="Int_Baja_Der_1">Int_Baja_Der_1:</label>
+                <input asp-for="Int_Baja_Der_1" readonly />
+            </section>
+            <section>
+                <label asp-for="Int_Baja_Izq_1_Med">Int_Baja_Izq_1_Med:</label>
+                <input asp-for="Int_Baja_Izq_1_Med" />
+                @if (!Model.Int_Baja_Izq_1 && Model.Int_Baja_Izq_1_Med != null)
+                {
+                    <span class="error-message">Debe ser nulo si Int_Baja_Izq_1 es falso.</span>
+                }
+                @if (Model.Int_Baja_Izq_1 && Model.Int_Baja_Izq_1_Med == null)
+                {
+                    <span class="error-message">No debe ser nulo si Int_Baja_Izq_1 es verdadero.</span>
+                }
+            </section>
+            <section>
+                <label asp-for="Inc_Baja_Izq_1_Med">Inc_Baja_Izq_1_Med:</label>
+                <input asp-for="Inc_Baja_Izq_1_Med" />
+                @if (!Model.Inc_Baja_Izq_1 && Model.Inc_Baja_Izq_1_Med != null)
+                {
+                    <span class="error-message">Debe ser nulo si Inc_Baja_Izq_1 es falso.</span>
+                }
+                @if (Model.Inc_Baja_Izq_1 && Model.Inc_Baja_Izq_1_Med == null)
+                {
+                    <span class="error-message">No debe ser nulo si Inc_Baja_Izq_1 es verdadero.</span>
+                }
+            </section>
+            <section>
+                <label asp-for="Int_Baja_Der_1_Med">Int_Baja_Der_1_Med:</label>
+                <input asp-for="Int_Baja_Der_1_Med" />
+                @if (!Model.Int_Baja_Der_1 && Model.Int_Baja_Der_1_Med != null)
+                {
+                    <span class="error-message">Debe ser nulo si Int_Baja_Der_1 es falso.</span>
+                }
+                @if (Model.Int_Baja_Der_1 && Model.Int_Baja_Der_1_Med == null)
+                {
+                    <span class="error-message">No debe ser nulo si Int_Baja_Der_1 es verdadero.</span>
+                }
+            </section>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+
+
+
